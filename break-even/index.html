@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>損益分岐点計算ツール｜必要売上・必要個数を無料計算</title>
+<meta name="description" content="固定費と粗利率、または単価と変動費から、損益分岐点売上と目標利益に必要な売上・販売個数を無料で計算。小規模事業者や個人事業の黒字ライン確認に。登録不要、ブラウザ内だけで計算します。">
+<link rel="canonical" href="https://komuse-lab.github.io/keisan-tools/break-even/">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+<header class="site">
+<div class="brand">KOMUSE 計算ツール</div>
+<h1>損益分岐点・必要売上計算</h1>
+<p class="lead">「月いくら売れば黒字か」「目標利益には何個売ればいいか」を計算します。粗利率ベースと単価ベースの2つのモードがあり、数字を入れるとその場で結果が出ます。</p>
+</header>
+
+<div class="card">
+<h2 style="margin-top:0">モードA：粗利率ベース</h2>
+<label for="a-fixed">固定費（円／月など期間あたり）</label>
+<input type="number" id="a-fixed" value="200000" min="0" inputmode="numeric">
+<div class="grid2">
+<div>
+<label for="a-margin">粗利率（％）</label>
+<input type="number" id="a-margin" value="40" min="0" max="100" step="0.1" inputmode="decimal">
+</div>
+<div>
+<label for="a-target">目標利益（円・任意）</label>
+<input type="number" id="a-target" value="100000" min="0" inputmode="numeric">
+</div>
+</div>
+<div class="result">
+<div class="note">目標利益に必要な売上</div>
+<div class="main" id="a-need">—</div>
+<table>
+<tr><th>損益分岐点売上（利益ゼロのライン）</th><td id="a-bep">—</td></tr>
+<tr><th>必要売上（固定費＋目標利益）</th><td id="a-need2">—</td></tr>
+</table>
+</div>
+</div>
+
+<div class="card">
+<h2 style="margin-top:0">モードB：単価ベース</h2>
+<label for="b-fixed">固定費（円／月など期間あたり）</label>
+<input type="number" id="b-fixed" value="200000" min="0" inputmode="numeric">
+<div class="grid2">
+<div>
+<label for="b-price">販売単価（円／1個）</label>
+<input type="number" id="b-price" value="5000" min="0" inputmode="numeric">
+</div>
+<div>
+<label for="b-var">1個あたり変動費（円）</label>
+<input type="number" id="b-var" value="3000" min="0" inputmode="numeric">
+</div>
+</div>
+<label for="b-target">目標利益（円・任意）</label>
+<input type="number" id="b-target" value="100000" min="0" inputmode="numeric">
+<div class="result">
+<div class="note">目標利益に必要な販売個数</div>
+<div class="main" id="b-units">—</div>
+<table>
+<tr><th>1個あたり限界利益（単価−変動費）</th><td id="b-contrib">—</td></tr>
+<tr><th>必要売上（必要個数×単価）</th><td id="b-need-sales">—</td></tr>
+<tr><th>損益分岐点の個数（利益ゼロのライン）</th><td id="b-bep-units">—</td></tr>
+<tr><th>損益分岐点売上</th><td id="b-bep-sales">—</td></tr>
+</table>
+</div>
+<p class="note">必要個数・損益分岐点の個数は、端数を切り上げた個数で表示しています。</p>
+</div>
+
+<h2>計算式</h2>
+<span class="formula">損益分岐点売上 ＝ 固定費 ÷ 粗利率</span>
+<span class="formula">必要売上 ＝（固定費 ＋ 目標利益）÷ 粗利率</span>
+<span class="formula">1個あたり限界利益 ＝ 単価 − 1個あたり変動費</span>
+<span class="formula">必要個数 ＝（固定費 ＋ 目標利益）÷ 1個あたり限界利益</span>
+<p>検算例：固定費200,000円・粗利率40％・目標利益100,000円なら、損益分岐点売上は200,000÷0.4＝500,000円、必要売上は300,000÷0.4＝750,000円。単価5,000円・変動費3,000円なら限界利益は2,000円で、必要個数は300,000÷2,000＝150個です。</p>
+
+<h2>使い方・注意点</h2>
+<ul>
+<li>固定費は、家賃・人件費・保険料など、売上に関係なくかかる費用の合計です。月単位でそろえると「今月の黒字ライン」が読みやすくなります。</li>
+<li>粗利率は「粗利÷売上」です。変動費（仕入・材料・送料など）を引いた後の割合を使ってください。</li>
+<li>モードBで単価が変動費以下だと、売るほど赤字になるため計算できません（「—」と表示されます）。</li>
+<li>金額はすべて税引前の試算です。税金・社会保険料などは含んでいません。</li>
+<li>入力した数字はブラウザの中だけで処理され、サーバーに送信されることはありません。</li>
+<li>本ツールは個人が運営する試算用ツールで、会計・税務の専門家による助言ではありません。経営判断の際は最新の実績数字でご確認ください。</li>
+</ul>
+
+<nav class="tools">
+<a href="../">トップ（ツール一覧）</a>
+<a href="../furima/">フリマ利益計算</a>
+<a href="../margin/">粗利率・値入率・売価逆算</a>
+<a href="../break-even/">損益分岐点・目標利益計算</a>
+<a href="../inventory-turnover/">在庫回転率・回転日数</a>
+<a href="../business-days/">営業日計算</a>
+<a href="../stagnation/">滞留日数・滞留在庫額（単品）</a>
+</nav>
+
+<footer>© KOMUSE<br>本ツールは試算用です。実際の金額は各公式サービスの最新情報をご確認ください。</footer>
+</div>
+<script>
+function num(id){
+  var v = parseFloat(document.getElementById(id).value);
+  return isNaN(v) ? null : v;
+}
+function yen(v){
+  if (v === null || !isFinite(v)) return "—";
+  return Math.round(v).toLocaleString("ja-JP") + "円";
+}
+function units(v){
+  if (v === null || !isFinite(v)) return "—";
+  return Math.ceil(v).toLocaleString("ja-JP") + "個";
+}
+function calcA(){
+  var fixed = num("a-fixed"), marginPct = num("a-margin"), target = num("a-target");
+  var margin = marginPct === null ? null : marginPct / 100;
+  var t = target === null ? 0 : target;
+  var bep = null, need = null;
+  if (fixed !== null && margin !== null && margin > 0 && margin <= 1){
+    bep = fixed / margin;
+    need = (fixed + t) / margin;
+  }
+  document.getElementById("a-need").textContent = yen(need);
+  document.getElementById("a-need2").textContent = yen(need);
+  document.getElementById("a-bep").textContent = yen(bep);
+}
+function calcB(){
+  var fixed = num("b-fixed"), price = num("b-price"), varc = num("b-var"), target = num("b-target");
+  var t = target === null ? 0 : target;
+  var contrib = (price !== null && varc !== null) ? price - varc : null;
+  var needUnits = null, bepUnits = null;
+  if (fixed !== null && contrib !== null && contrib > 0){
+    needUnits = (fixed + t) / contrib;
+    bepUnits = fixed / contrib;
+  }
+  document.getElementById("b-units").textContent = units(needUnits);
+  document.getElementById("b-contrib").textContent = yen(contrib);
+  document.getElementById("b-need-sales").textContent =
+    (needUnits !== null && price !== null) ? yen(Math.ceil(needUnits) * price) : "—";
+  document.getElementById("b-bep-units").textContent = units(bepUnits);
+  document.getElementById("b-bep-sales").textContent =
+    (bepUnits !== null && price !== null) ? yen(Math.ceil(bepUnits) * price) : "—";
+}
+["a-fixed","a-margin","a-target"].forEach(function(id){
+  document.getElementById(id).addEventListener("input", calcA);
+});
+["b-fixed","b-price","b-var","b-target"].forEach(function(id){
+  document.getElementById(id).addEventListener("input", calcB);
+});
+calcA(); calcB();
+</script>
+</body>
+</html>
