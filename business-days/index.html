@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>営業日計算ツール｜何営業日後・営業日数を無料計算</title>
+<meta name="description" content="基準日からN営業日後の日付と、期間内の営業日数を計算する無料ツール。日本の祝日（2026年・2027年）対応。土日祝休み・土日休み・日曜のみ休みの営業形態プリセット付き。登録不要、入力はブラウザ内だけで処理されます。">
+<link rel="canonical" href="https://komuse-lab.github.io/keisan-tools/business-days/">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+<header class="site">
+<div class="brand">KOMUSE 計算ツール</div>
+<h1>営業日計算ツール（何営業日後・営業日数）</h1>
+<p class="lead">「5営業日後はいつか」「この期間に営業日は何日あるか」を計算します。日本の祝日に対応し、土曜営業などの営業形態も選べます。</p>
+</header>
+
+<div class="card">
+<h2 style="margin-top:0">N営業日後の日付を計算</h2>
+<label for="bd-base">基準日</label>
+<input type="date" id="bd-base" value="2026-11-06">
+<div class="grid2">
+<div>
+<label for="bd-n">営業日数（N）</label>
+<input type="number" id="bd-n" value="5" min="0" inputmode="numeric">
+</div>
+<div>
+<label for="bd-dir">方向</label>
+<select id="bd-dir">
+<option value="after" selected>営業日後</option>
+<option value="before">営業日前</option>
+</select>
+</div>
+</div>
+<label for="bd-preset1">営業形態（休みの設定）</label>
+<select id="bd-preset1">
+<option value="sat-sun-holiday" selected>土日祝休み（祝日も休み）</option>
+<option value="sat-sun">土日休み（祝日は営業）</option>
+<option value="sun">日曜のみ休み（土曜・祝日は営業）</option>
+</select>
+<div class="result" id="bd-result1">
+<div class="main" id="bd-main1">—</div>
+<table>
+<tr><th>基準日</th><td id="bd-base-out">—</td></tr>
+<tr><th>暦日での差</th><td id="bd-cal-out">—</td></tr>
+<tr><th>そのうち非営業日</th><td id="bd-off-out">—</td></tr>
+</table>
+</div>
+</div>
+
+<div class="card">
+<h2 style="margin-top:0">期間内の営業日数を数える</h2>
+<div class="grid2">
+<div>
+<label for="bd-start">開始日</label>
+<input type="date" id="bd-start" value="2026-11-09">
+</div>
+<div>
+<label for="bd-end">終了日</label>
+<input type="date" id="bd-end" value="2026-11-13">
+</div>
+</div>
+<label for="bd-preset2">営業形態（休みの設定）</label>
+<select id="bd-preset2">
+<option value="sat-sun-holiday" selected>土日祝休み（祝日も休み）</option>
+<option value="sat-sun">土日休み（祝日は営業）</option>
+<option value="sun">日曜のみ休み（土曜・祝日は営業）</option>
+</select>
+<div class="result" id="bd-result2">
+<div class="main" id="bd-main2">—</div>
+<table>
+<tr><th>期間の暦日数（両端含む）</th><td id="bd-cal2-out">—</td></tr>
+<tr><th>そのうち非営業日</th><td id="bd-off2-out">—</td></tr>
+</table>
+</div>
+</div>
+
+<h2>計算式</h2>
+<span class="formula">営業日 ＝ 営業形態プリセットの休業日に当たらず、「土日祝休み」の場合は祝日でもない日</span>
+<span class="formula">N営業日後 ＝ 基準日の翌日（前計算の場合は前日）から1日ずつ進み、営業日だけを数えてN日目に当たる日付（起算日＝基準日は数えません）</span>
+<span class="formula">期間の営業日数 ＝ 開始日から終了日まで（両端を含む）の営業日の日数</span>
+
+<h2>使い方・注意点</h2>
+<ul>
+<li>初期値には検算例の数字が入っています。ご自身の日付に変えてお使いください。</li>
+<li>祝日データは内閣府が公開する祝日CSVに基づく2026年・2027年分を内蔵しています。2028年分は翌年2月に官報で公表された後に追加予定のため、2028年以降の日付は祝日を考慮しない計算になります。</li>
+<li>会社独自の休業日（年末年始・夏季休業・創業記念日など）は反映されません。実際の納期・期日は取引先のカレンダーをご確認ください。</li>
+<li>本ツールは試算用です。入力した日付はブラウザの中だけで処理され、サーバーに送信されることはありません。</li>
+</ul>
+
+<nav class="tools">
+<a href="../">トップ（ツール一覧）</a>
+<a href="../furima/">フリマ利益計算</a>
+<a href="../margin/">粗利率・値入率・売価逆算</a>
+<a href="../break-even/">損益分岐点・目標利益計算</a>
+<a href="../inventory-turnover/">在庫回転率・回転日数</a>
+<a href="../business-days/">営業日計算</a>
+<a href="../stagnation/">滞留日数・滞留在庫額（単品）</a>
+</nav>
+
+<footer>© KOMUSE<br>本ツールは試算用です。実際の金額は各公式サービスの最新情報をご確認ください。</footer>
+</div>
+
+<script>
+// 祝日データ：内閣府「国民の祝日」CSV（syukujitsu.csv）と突き合わせ済み（2026年18日・2027年17日）
+// CSV上の名称が「休日」のものは、振替休日・国民の休日である旨を補記した
+const HOLIDAYS = {
+"2026-01-01":"元日","2026-01-12":"成人の日","2026-02-11":"建国記念の日","2026-02-23":"天皇誕生日",
+"2026-03-20":"春分の日","2026-04-29":"昭和の日","2026-05-03":"憲法記念日","2026-05-04":"みどりの日",
+"2026-05-05":"こどもの日","2026-05-06":"休日（振替休日）","2026-07-20":"海の日","2026-08-11":"山の日",
+"2026-09-21":"敬老の日","2026-09-22":"休日（国民の休日）","2026-09-23":"秋分の日","2026-10-12":"スポーツの日",
+"2026-11-03":"文化の日","2026-11-23":"勤労感謝の日",
+"2027-01-01":"元日","2027-01-11":"成人の日","2027-02-11":"建国記念の日","2027-02-23":"天皇誕生日",
+"2027-03-21":"春分の日","2027-03-22":"休日（振替休日）","2027-04-29":"昭和の日","2027-05-03":"憲法記念日",
+"2027-05-04":"みどりの日","2027-05-05":"こどもの日","2027-07-19":"海の日","2027-08-11":"山の日",
+"2027-09-20":"敬老の日","2027-09-23":"秋分の日","2027-10-11":"スポーツの日","2027-11-03":"文化の日",
+"2027-11-23":"勤労感謝の日"
+};
+const WD = ["日","月","火","水","木","金","土"];
+function parseDate(v){
+  if(!v) return null;
+  const p = v.split("-").map(Number);
+  if(p.length!==3 || p.some(isNaN)) return null;
+  return new Date(p[0], p[1]-1, p[2]);
+}
+function key(d){
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+  return d.getFullYear()+"-"+m+"-"+day;
+}
+function fmtDate(d){
+  return d.getFullYear()+"年"+(d.getMonth()+1)+"月"+d.getDate()+"日（"+WD[d.getDay()]+"）";
+}
+function isBusinessDay(d, preset){
+  const w = d.getDay();
+  if(preset==="sun"){
+    return w!==0;
+  }
+  if(w===0 || w===6) return false;
+  if(preset==="sat-sun-holiday" && HOLIDAYS[key(d)]) return false;
+  return true;
+}
+function calcAfter(){
+  const base = parseDate(document.getElementById("bd-base").value);
+  const nRaw = document.getElementById("bd-n").value;
+  const n = nRaw==="" ? NaN : Number(nRaw);
+  const dir = document.getElementById("bd-dir").value;
+  const preset = document.getElementById("bd-preset1").value;
+  const main = document.getElementById("bd-main1");
+  const baseOut = document.getElementById("bd-base-out");
+  const calOut = document.getElementById("bd-cal-out");
+  const offOut = document.getElementById("bd-off-out");
+  if(!base || isNaN(n) || n<0){
+    main.textContent="—"; baseOut.textContent="—"; calOut.textContent="—"; offOut.textContent="—";
+    return;
+  }
+  const step = dir==="after" ? 1 : -1;
+  let d = new Date(base.getTime());
+  let counted = 0, off = 0, cal = 0;
+  while(counted < n){
+    d.setDate(d.getDate()+step);
+    cal++;
+    if(isBusinessDay(d, preset)){ counted++; } else { off++; }
+  }
+  main.textContent = fmtDate(d);
+  baseOut.textContent = fmtDate(base);
+  calOut.textContent = (dir==="after" ? "+" : "−") + cal + "日";
+  offOut.textContent = off + "日";
+}
+function calcRange(){
+  const start = parseDate(document.getElementById("bd-start").value);
+  const end = parseDate(document.getElementById("bd-end").value);
+  const preset = document.getElementById("bd-preset2").value;
+  const main = document.getElementById("bd-main2");
+  const calOut = document.getElementById("bd-cal2-out");
+  const offOut = document.getElementById("bd-off2-out");
+  if(!start || !end || end < start){
+    main.textContent="—"; calOut.textContent="—"; offOut.textContent="—";
+    return;
+  }
+  let biz = 0, off = 0, cal = 0;
+  let d = new Date(start.getTime());
+  while(d <= end){
+    cal++;
+    if(isBusinessDay(d, preset)){ biz++; } else { off++; }
+    d.setDate(d.getDate()+1);
+  }
+  main.textContent = biz + "日（営業日）";
+  calOut.textContent = cal + "日";
+  offOut.textContent = off + "日";
+}
+["bd-base","bd-n","bd-dir","bd-preset1"].forEach(id=>{
+  document.getElementById(id).addEventListener("input", calcAfter);
+  document.getElementById(id).addEventListener("change", calcAfter);
+});
+["bd-start","bd-end","bd-preset2"].forEach(id=>{
+  document.getElementById(id).addEventListener("input", calcRange);
+  document.getElementById(id).addEventListener("change", calcRange);
+});
+calcAfter();
+calcRange();
+</script>
+</body>
+</html>
