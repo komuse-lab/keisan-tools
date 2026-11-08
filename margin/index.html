@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>粗利率・値入率計算｜売価逆算と実質利益率の無料計算ツール</title>
+<meta name="description" content="売価と原価を入れるだけで、粗利・粗利率・原価率・値入率を計算。目標粗利率からの売価逆算と、送料・販売手数料込みの実質利益率にも対応。登録不要・無料の計算ツール。入力データは送信されません。">
+<link rel="canonical" href="https://komuse-lab.github.io/keisan-tools/margin/">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+<header class="site">
+<div class="brand">KOMUSE 計算ツール</div>
+<h1>粗利率・値入率・売価逆算</h1>
+<p class="lead">売価と原価を入力すると、粗利・粗利率・原価率・値入率をその場で計算します。目標粗利率から必要な売価を逆算したり、送料・販売手数料まで差し引いた「実質利益率」を確認したりもできます。</p>
+</header>
+
+<div class="card">
+<div class="grid2">
+<div>
+<label for="price">売価（円）</label>
+<input type="number" id="price" value="3000" min="0" inputmode="numeric">
+</div>
+<div>
+<label for="cost">原価（円）</label>
+<input type="number" id="cost" value="1800" min="0" inputmode="numeric">
+</div>
+</div>
+<div class="result">
+<div class="note">粗利率</div>
+<div class="main" id="mainRate">—</div>
+<table>
+<tr><th>粗利</th><td id="rGross">—</td></tr>
+<tr><th>原価率</th><td id="rCostRate">—</td></tr>
+<tr><th>値入率（原価に対する割合）</th><td id="rMarkup">—</td></tr>
+</table>
+</div>
+</div>
+
+<div class="card">
+<p class="note">送料・販売手数料も差し引いた場合の実質的な利益を確認できます（任意入力）。</p>
+<div class="grid2">
+<div>
+<label for="shipFee">送料（円）</label>
+<input type="number" id="shipFee" value="210" min="0" inputmode="numeric">
+</div>
+<div>
+<label for="feeRate">販売手数料率（%）</label>
+<input type="number" id="feeRate" value="10" min="0" step="0.1" inputmode="decimal">
+</div>
+</div>
+<div class="result">
+<div class="note">実質利益率（送料・手数料込み）</div>
+<div class="main" id="realRate">—</div>
+<table>
+<tr><th>販売手数料</th><td id="rFeeAmt">—</td></tr>
+<tr><th>実質利益</th><td id="rRealProfit">—</td></tr>
+</table>
+</div>
+</div>
+
+<div class="card">
+<div class="grid2">
+<div>
+<label for="revCost">原価（円）</label>
+<input type="number" id="revCost" value="1800" min="0" inputmode="numeric">
+</div>
+<div>
+<label for="targetRate">目標粗利率（%）</label>
+<input type="number" id="targetRate" value="50" min="0" step="0.1" inputmode="decimal">
+</div>
+</div>
+<div class="result">
+<div class="note">目標粗利率を出すために必要な売価</div>
+<div class="main" id="revPrice">—</div>
+<table>
+<tr><th>その売価での粗利</th><td id="rRevGross">—</td></tr>
+</table>
+</div>
+</div>
+
+<h2>計算式</h2>
+<span class="formula">粗利 ＝ 売価 − 原価</span>
+<span class="formula">粗利率 ＝ 粗利 ÷ 売価 × 100</span>
+<span class="formula">原価率 ＝ 原価 ÷ 売価 × 100</span>
+<span class="formula">値入率 ＝ 粗利 ÷ 原価 × 100</span>
+<span class="formula">必要売価 ＝ 原価 ÷（1 − 目標粗利率 ÷ 100）</span>
+<span class="formula">実質利益 ＝ 売価 − 原価 − 送料 − 販売手数料（売価 × 手数料率、円未満は切り捨て）</span>
+
+<h2>使い方・注意点</h2>
+<ul>
+<li>粗利率と値入率は分母が違います。粗利率は売価が分母、値入率は原価が分母です。同じ商品でも数字が変わるため、混同しないようご注意ください。</li>
+<li>金額はすべて税引前の試算です。ここでの粗利は、人件費・家賃などの固定費を差し引く前の金額です。</li>
+<li>実質利益率の手数料率は、利用する販売先（フリマアプリ・ECモール・自社店舗など）によって異なります。実際の料率は各公式サービスの最新情報をご確認ください。</li>
+<li>必要売価は、目標粗利率をちょうど達成する金額を円未満切り上げで表示しています。</li>
+<li>入力した数値はサーバーに送信されず、すべてお使いのブラウザの中だけで処理されます。</li>
+</ul>
+
+<nav class="tools">
+<a href="../">トップ（計算ツール一覧）</a>
+<a href="../furima/">フリマ利益計算</a>
+<a href="../margin/">粗利率・値入率・売価逆算</a>
+<a href="../break-even/">損益分岐点・目標利益計算</a>
+<a href="../inventory-turnover/">在庫回転率・回転日数</a>
+<a href="../business-days/">営業日計算</a>
+<a href="../stagnation/">滞留日数・滞留在庫額（単品）</a>
+</nav>
+
+<footer>© KOMUSE<br>本ツールは試算用です。実際の金額は各公式サービスの最新情報をご確認ください。</footer>
+</div>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var priceEl=$('price'), costEl=$('cost'), shipEl=$('shipFee'), feeRateEl=$('feeRate'),
+      revCostEl=$('revCost'), targetRateEl=$('targetRate');
+
+  function num(el){
+    var v = parseFloat(el.value);
+    return isFinite(v) ? v : NaN;
+  }
+  function yen(v){
+    if(!isFinite(v)) return '—';
+    return Math.round(v).toLocaleString('ja-JP') + '円';
+  }
+  function pct(v){
+    if(!isFinite(v)) return '—';
+    return v.toFixed(1) + '%';
+  }
+
+  function update(){
+    var price=num(priceEl), cost=num(costEl);
+    var baseValid = isFinite(price) && isFinite(cost);
+
+    // 粗利率など
+    if(baseValid){
+      var gross = price - cost;
+      $('rGross').textContent = yen(gross);
+      $('mainRate').textContent = pct(price > 0 ? gross / price * 100 : NaN);
+      $('mainRate').className = 'main' + (gross < 0 ? ' neg' : '');
+      $('rCostRate').textContent = pct(price > 0 ? cost / price * 100 : NaN);
+      $('rMarkup').textContent = pct(cost > 0 ? gross / cost * 100 : NaN);
+    } else {
+      $('mainRate').textContent = '—'; $('rGross').textContent = '—';
+      $('rCostRate').textContent = '—'; $('rMarkup').textContent = '—';
+    }
+
+    // 実質利益率
+    var ship=num(shipEl), feeRate=num(feeRateEl);
+    if(baseValid && isFinite(ship) && isFinite(feeRate)){
+      var fee = Math.floor(price * feeRate / 100);
+      var real = price - cost - ship - fee;
+      $('rFeeAmt').textContent = yen(fee);
+      $('rRealProfit').textContent = yen(real);
+      $('realRate').textContent = pct(price > 0 ? real / price * 100 : NaN);
+      $('realRate').className = 'main' + (real < 0 ? ' neg' : '');
+    } else {
+      $('realRate').textContent = '—'; $('rFeeAmt').textContent = '—'; $('rRealProfit').textContent = '—';
+    }
+
+    // 逆算
+    var revCost=num(revCostEl), target=num(targetRateEl);
+    if(isFinite(revCost) && isFinite(target) && target < 100){
+      var need = Math.ceil(revCost / (1 - target / 100));
+      $('revPrice').textContent = yen(need);
+      $('rRevGross').textContent = yen(need - revCost);
+    } else {
+      $('revPrice').textContent = '—'; $('rRevGross').textContent = '—';
+    }
+  }
+
+  [priceEl,costEl,shipEl,feeRateEl,revCostEl,targetRateEl].forEach(function(el){
+    el.addEventListener('input', update);
+    el.addEventListener('change', update);
+  });
+  update();
+})();
+</script>
+</body>
+</html>
