@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://komuse-lab.github.io/keisan-tools/sitemap.xml
