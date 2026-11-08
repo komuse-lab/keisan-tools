@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>フリマ利益計算｜メルカリ・ラクマ・Yahoo!フリマ対応の無料計算ツール</title>
+<meta name="description" content="販売価格・仕入値・送料を入れるだけで、メルカリ・ラクマ・Yahoo!フリマの販売手数料を引いた利益と利益率を計算。3社同時比較、値下げ後の利益、目標利益からの売値逆算に対応。登録不要・無料。入力データは送信されません。">
+<link rel="canonical" href="https://komuse-lab.github.io/keisan-tools/furima/">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+<header class="site">
+<div class="brand">KOMUSE 計算ツール</div>
+<h1>フリマ利益計算（メルカリ・ラクマ・Yahoo!フリマ）</h1>
+<p class="lead">販売価格・仕入値・送料を入力すると、販売手数料を引いた実際の利益と利益率をその場で計算します。3社の同時比較、値下げ後の利益、目標利益からの売値逆算にも対応しています。</p>
+</header>
+
+<div class="card">
+<label for="price">販売価格（円）</label>
+<input type="number" id="price" value="3000" min="0" inputmode="numeric">
+<div class="grid2">
+<div>
+<label for="cost">仕入値（円）</label>
+<input type="number" id="cost" value="1000" min="0" inputmode="numeric">
+</div>
+<div>
+<label for="shipping">送料（円）</label>
+<input type="number" id="shipping" value="210" min="0" inputmode="numeric">
+</div>
+</div>
+<label for="expense">その他経費（円）<span class="note">梱包資材費など</span></label>
+<input type="number" id="expense" value="0" min="0" inputmode="numeric">
+<label for="platform">プラットフォーム</label>
+<select id="platform">
+<option value="mercari" selected>メルカリ（手数料10%）</option>
+<option value="rakuma">ラクマ（手数料は下の段階で選択）</option>
+<option value="yahoo">Yahoo!フリマ（手数料5%）</option>
+</select>
+<label for="rakumaRate">ラクマの手数料率（前月の販売実績で決まる段階）</label>
+<select id="rakumaRate">
+<option value="0.10" selected>10%（基本）</option>
+<option value="0.09">9%</option>
+<option value="0.08">8%</option>
+<option value="0.07">7%</option>
+<option value="0.06">6%</option>
+<option value="0.045">4.5%</option>
+</select>
+<p class="note">プラットフォームでラクマを選んだときに、この手数料率が適用されます。</p>
+
+<div class="result">
+<div class="note" id="mainLabel">利益（メルカリ）</div>
+<div class="main" id="mainProfit">—</div>
+<table>
+<tr><th>販売手数料</th><td id="rFee">—</td></tr>
+<tr><th>手取り額（手数料・送料を引いた金額）</th><td id="rNet">—</td></tr>
+<tr><th>利益率（販売価格に対する割合）</th><td id="rMargin">—</td></tr>
+</table>
+</div>
+</div>
+
+<div class="card">
+<label for="discount">値下げ額（円）</label>
+<input type="number" id="discount" value="0" min="0" inputmode="numeric">
+<div class="result">
+<div class="note">値下げ後の利益（<span id="dPriceLabel">販売価格 —</span>）</div>
+<div class="main" id="dProfit">—</div>
+<table>
+<tr><th>値下げ後の販売手数料</th><td id="dFee">—</td></tr>
+<tr><th>値下げ後の利益率</th><td id="dMargin">—</td></tr>
+</table>
+</div>
+</div>
+
+<div class="card">
+<label for="target">目標利益（円）</label>
+<input type="number" id="target" value="1500" min="0" inputmode="numeric">
+<div class="result">
+<div class="note">目標利益を出すために必要な販売価格（選択中のプラットフォーム）</div>
+<div class="main" id="tPrice">—</div>
+</div>
+</div>
+
+<h2>3社同時比較</h2>
+<div class="card">
+<p class="note">同じ販売価格・仕入値・送料・経費で、3社の手数料と利益を比べます。ラクマは上で選んだ手数料率で計算します。</p>
+<table class="cmp">
+<tr><th>プラットフォーム</th><th>手数料率</th><th>手数料</th><th>利益</th><th>利益率</th></tr>
+<tr><th>メルカリ</th><td>10%</td><td id="cMercariFee">—</td><td id="cMercariProfit">—</td><td id="cMercariMargin">—</td></tr>
+<tr><th>ラクマ</th><td id="cRakumaRate">10%</td><td id="cRakumaFee">—</td><td id="cRakumaProfit">—</td><td id="cRakumaMargin">—</td></tr>
+<tr><th>Yahoo!フリマ</th><td>5%</td><td id="cYahooFee">—</td><td id="cYahooProfit">—</td><td id="cYahooMargin">—</td></tr>
+</table>
+</div>
+
+<h2>計算式</h2>
+<span class="formula">販売手数料 ＝ 販売価格 × 手数料率（円未満は切り捨て）</span>
+<span class="formula">利益 ＝ 販売価格 − 販売手数料 − 送料 − 仕入値 − その他経費</span>
+<span class="formula">利益率 ＝ 利益 ÷ 販売価格 × 100</span>
+<span class="formula">必要販売価格 ＝（仕入値 ＋ 送料 ＋ その他経費 ＋ 目標利益）÷（1 − 手数料率）（円未満は切り上げ）</span>
+
+<h2>使い方・注意点</h2>
+<ul>
+<li>金額はすべて税引前の試算です。売上金の振込手数料は含んでいません。</li>
+<li>手数料率は2026年11月時点の情報をもとにしています。手数料は変更されることがあるため、実際の金額は各社の公式ヘルプで最新の情報をご確認ください。</li>
+<li>ラクマの手数料率は、前月26日〜当月25日の販売実績（対象取引の回数と金額の両方）で決まる6段階制です。自分の段階が分からない場合は「10%（基本）」で計算してください。</li>
+<li>Yahoo!フリマの手数料は端数処理の関係で、このツールの式上の値と1円程度ずれる場合があります（例：販売価格3,000円で、実際の手数料が149円になる場合があります）。</li>
+<li>事業として継続的に販売する場合は、各サービスの利用規約をご確認ください。メルカリでは事業者向けの「メルカリShops」（販売手数料10%）が用意されています。</li>
+<li>本ツールはメルカリ・ラクマ・Yahoo!フリマの公式ツールではありません。個人が運営する試算用のツールです。</li>
+<li>入力した数値はサーバーに送信されず、すべてお使いのブラウザの中だけで処理されます。</li>
+</ul>
+
+<nav class="tools">
+<a href="../">トップ（計算ツール一覧）</a>
+<a href="../furima/">フリマ利益計算</a>
+<a href="../margin/">粗利率・値入率・売価逆算</a>
+<a href="../break-even/">損益分岐点・目標利益計算</a>
+<a href="../inventory-turnover/">在庫回転率・回転日数</a>
+<a href="../business-days/">営業日計算</a>
+<a href="../stagnation/">滞留日数・滞留在庫額（単品）</a>
+</nav>
+
+<footer>© KOMUSE<br>本ツールは試算用です。実際の金額は各公式サービスの最新情報をご確認ください。</footer>
+</div>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var priceEl=$('price'), costEl=$('cost'), shipEl=$('shipping'), expEl=$('expense'),
+      platEl=$('platform'), rakumaEl=$('rakumaRate'), discEl=$('discount'), targetEl=$('target');
+
+  function num(el){
+    var v = parseFloat(el.value);
+    return isFinite(v) ? v : NaN;
+  }
+  function yen(v){
+    if(!isFinite(v)) return '—';
+    return Math.round(v).toLocaleString('ja-JP') + '円';
+  }
+  function pct(v){
+    if(!isFinite(v)) return '—';
+    return v.toFixed(1) + '%';
+  }
+  function rateFor(plat, rakumaRate){
+    if(plat==='mercari') return 0.10;
+    if(plat==='yahoo') return 0.05;
+    return rakumaRate;
+  }
+  function calc(price, rate, cost, ship, exp){
+    var fee = Math.floor(price * rate);
+    var profit = price - fee - ship - cost - exp;
+    return { fee: fee, profit: profit, net: price - fee - ship,
+             margin: price > 0 ? profit / price * 100 : NaN };
+  }
+
+  function update(){
+    var price=num(priceEl), cost=num(costEl), ship=num(shipEl), exp=num(expEl),
+        rakumaRate=parseFloat(rakumaEl.value), plat=platEl.value;
+    var valid = isFinite(price) && isFinite(cost) && isFinite(ship) && isFinite(exp);
+    var rate = rateFor(plat, rakumaRate);
+    var names = { mercari:'メルカリ', rakuma:'ラクマ', yahoo:'Yahoo!フリマ' };
+
+    // メイン結果
+    if(valid){
+      var r = calc(price, rate, cost, ship, exp);
+      $('mainLabel').textContent = '利益（' + names[plat] + '）';
+      $('mainProfit').textContent = yen(r.profit);
+      $('mainProfit').className = 'main ' + (r.profit < 0 ? 'neg' : '');
+      $('rFee').textContent = yen(r.fee);
+      $('rNet').textContent = yen(r.net);
+      $('rMargin').textContent = pct(r.margin);
+    } else {
+      $('mainProfit').textContent = '—';
+      $('rFee').textContent = '—'; $('rNet').textContent = '—'; $('rMargin').textContent = '—';
+    }
+
+    // 値下げ後
+    var disc = num(discEl);
+    if(valid && isFinite(disc)){
+      var dPrice = Math.max(0, price - disc);
+      var d = calc(dPrice, rate, cost, ship, exp);
+      $('dPriceLabel').textContent = '販売価格 ' + yen(dPrice);
+      $('dProfit').textContent = yen(d.profit);
+      $('dProfit').className = 'main ' + (d.profit < 0 ? 'neg' : '');
+      $('dFee').textContent = yen(d.fee);
+      $('dMargin').textContent = pct(d.margin);
+    } else {
+      $('dPriceLabel').textContent = '販売価格 —';
+      $('dProfit').textContent = '—'; $('dFee').textContent = '—'; $('dMargin').textContent = '—';
+    }
+
+    // 逆算（目標利益→必要販売価格）
+    var target = num(targetEl);
+    if(valid && isFinite(target) && rate < 1){
+      var need = Math.ceil((cost + ship + exp + target) / (1 - rate));
+      $('tPrice').textContent = yen(need);
+    } else {
+      $('tPrice').textContent = '—';
+    }
+
+    // 3社比較
+    if(valid){
+      var m = calc(price, 0.10, cost, ship, exp);
+      var rk = calc(price, rakumaRate, cost, ship, exp);
+      var y = calc(price, 0.05, cost, ship, exp);
+      $('cMercariFee').textContent = yen(m.fee); $('cMercariProfit').textContent = yen(m.profit); $('cMercariMargin').textContent = pct(m.margin);
+      $('cRakumaRate').textContent = (rakumaRate * 100).toString().replace(/\.0+$/,'') + '%';
+      $('cRakumaFee').textContent = yen(rk.fee); $('cRakumaProfit').textContent = yen(rk.profit); $('cRakumaMargin').textContent = pct(rk.margin);
+      $('cYahooFee').textContent = yen(y.fee); $('cYahooProfit').textContent = yen(y.profit); $('cYahooMargin').textContent = pct(y.margin);
+    } else {
+      ['cMercariFee','cMercariProfit','cMercariMargin','cRakumaFee','cRakumaProfit','cRakumaMargin','cYahooFee','cYahooProfit','cYahooMargin'].forEach(function(id){ $(id).textContent='—'; });
+    }
+  }
+
+  [priceEl,costEl,shipEl,expEl,platEl,rakumaEl,discEl,targetEl].forEach(function(el){
+    el.addEventListener('input', update);
+    el.addEventListener('change', update);
+  });
+  update();
+})();
+</script>
+</body>
+</html>
